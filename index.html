@@ -28,9 +28,9 @@
     </ul>
   </section>
 
-  <form name="vaga-limpeza" method="POST" action="/obrigado.html" data-netlify="true" netlify-honeypot="bot-field">
-    <input type="hidden" name="form-name" value="vaga-limpeza">
-    <p class="esconde"><label>Não preencha: <input name="bot-field"></label></p>
+  <form id="form-vaga" method="POST" action="https://formspree.io/f/SEU_ID_AQUI">
+    <input type="hidden" name="_subject" value="Novo cadastro - Vaga de limpeza Catarinense">
+    <p class="esconde"><label>Não preencha: <input name="_gotcha" tabindex="-1" autocomplete="off"></label></p>
 
     <h2>Seu cadastro</h2>
     <p class="dica">Campos sem "opcional" são obrigatórios.</p>
@@ -109,10 +109,22 @@
       <label class="aceite"><input type="checkbox" name="autorizacao" value="Sim" required> Autorizo o Supermercado Catarinense a usar meus dados só para este processo seletivo e a falar comigo pelo WhatsApp.</label>
     </div>
 
-    <button type="submit">Enviar cadastro</button>
+    <button type="submit" id="btn-enviar">Enviar cadastro</button>
+    <p id="erro" class="dica" style="margin-top:12px;color:var(--vermelho)" hidden>Não deu pra enviar. Confira sua internet e toque em "Enviar cadastro" de novo.</p>
   </form>
 
   <p class="rodape">Supermercado Catarinense · @catarinense.supermercado</p>
 </main>
+<script>
+const form=document.getElementById('form-vaga'),btn=document.getElementById('btn-enviar'),erro=document.getElementById('erro');
+form.addEventListener('submit',async e=>{
+  e.preventDefault();erro.hidden=true;btn.disabled=true;btn.textContent='Enviando...';
+  try{
+    const r=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
+    if(r.ok){window.location.href='obrigado.html';return;}
+    throw new Error();
+  }catch(_){erro.hidden=false;btn.disabled=false;btn.textContent='Enviar cadastro';}
+});
+</script>
 </body>
 </html>
